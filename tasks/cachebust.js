@@ -32,7 +32,7 @@ module.exports = function(grunt) {
             opts.baseDir += '/';
         }
 
-        // ensure the empty prefixes are always there
+        // ensure the empty prefix is always there
         if (opts.prefixes.indexOf('') === -1) {
             opts.prefixes.push('');
         }
@@ -48,7 +48,7 @@ module.exports = function(grunt) {
             }
 
             if (p[0] === '/') continue;
-            // ensure non-empty prefixes also have a leading slash prefix as well
+            // ensure prefixes also have a leading slash prefix as well
             var slashedPrefix = '/' + p;
             if (opts.prefixes.indexOf(slashedPrefix) === -1) {
                 opts.prefixes.push(slashedPrefix);
