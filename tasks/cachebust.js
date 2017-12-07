@@ -22,13 +22,13 @@ var DEFAULT_OPTIONS = {
     prefixes: []
 };
 
-module.exports = function (grunt) {
-    var isUsingQueryString = function (opts) {
+module.exports = function(grunt) {
+    var isUsingQueryString = function(opts) {
         return opts.queryString;
     };
-    grunt.registerMultiTask('cacheBust', 'Bust static assets from the cache using content hashing', function () {
+    grunt.registerMultiTask('cacheBust', 'Bust static assets from the cache using content hashing', function() {
         var opts = this.options(DEFAULT_OPTIONS);
-        if (opts.baseDir.substr(-1) !== '/') {
+        if( opts.baseDir.substr(-1) !== '/' ) {
             opts.baseDir += '/';
         }
 
@@ -48,7 +48,7 @@ module.exports = function (grunt) {
 
         //clear output dir if it was set
         if (opts.clearOutputDir && opts.outputDir.length > 0) {
-            fs.removeSync(path.resolve((discoveryOpts.cwd ? discoveryOpts.cwd + '/' + opts.outputDir : opts.outputDir)));
+            fs.removeSync(path.resolve((discoveryOpts.cwd ? discoveryOpts.cwd + '/' +opts.outputDir : opts.outputDir)));
         }
 
         // Generate an asset map
@@ -88,7 +88,7 @@ module.exports = function (grunt) {
         ];
         // don't replace references that are already cache busted
         if (!isUsingQueryString(opts)) {
-            replaceEnclosedBy = replaceEnclosedBy.concat(replaceEnclosedBy.map(function (reb) {
+            replaceEnclosedBy = replaceEnclosedBy.concat(replaceEnclosedBy.map(function(reb) {
                 return [reb[0], '?'];
             }));
         }
@@ -112,7 +112,7 @@ module.exports = function (grunt) {
 
             var baseDirs = filepath.substr(baseDir.length).split('/');
 
-            _.each(assetMap, function (hashed, original) {
+            _.each(assetMap, function(hashed, original) {
                 var replace = [
                     // abs path
                     [original, hashed],
@@ -137,7 +137,7 @@ module.exports = function (grunt) {
                     }
                 }
 
-                _.each(replace, function (r) {
+                _.each(replace, function(r) {
                     var original = r[0];
                     var hashed = r[1];
 
@@ -195,25 +195,25 @@ module.exports = function (grunt) {
             // check if fully specified filenames have been busted and replace with busted file
             var baseDirResolved = path.resolve(baseDir) + '/';
             var cwd = process.cwd() + '/';
-            originalConfig.src = originalConfig.src.map(function (file) {
-                if (assetMap) {
+            originalConfig.src = originalConfig.src.map(function(file) {
+                if( assetMap ) {
                     var files = [file];
-                    if (path.resolve(cwd + file).substr(0, baseDirResolved.length) === baseDirResolved) {
+                    if(path.resolve(cwd + file).substr(0, baseDirResolved.length) === baseDirResolved) {
                         files.push(path.resolve(cwd + file).substr(baseDirResolved.length));
                     }
                     var result;
-                    files.forEach(function (file2) {
+                    files.forEach(function(file2) {
                         var fileResolved = path.resolve(baseDirResolved + file2);
                         if (!result && fileResolved.substr(0, baseDirResolved.length) === baseDirResolved && (fileResolved.substr(baseDirResolved.length)) in assetMap) {
                             result = assetMap[fileResolved.substr(baseDirResolved.length)];
                             // if original file had baseDir at the start, make sure it's there now
                             var baseDirNormalized = path.normalize(baseDir);
-                            if (path.normalize(file).substr(0, baseDirNormalized.length) === baseDirNormalized) {
+                            if(path.normalize(file).substr(0, baseDirNormalized.length) === baseDirNormalized) {
                                 result = baseDir + result;
                             }
                         }
                     });
-                    if (result) {
+                    if(result) {
                         return result;
                     }
                 }
@@ -222,7 +222,7 @@ module.exports = function (grunt) {
 
             return grunt.file
                 .expand(originalConfig, originalConfig.src)
-                .map(function (file) {
+                .map(function(file) {
 
                     // if the file is hashed, then the hashed file should be
                     // used instead of the original for replacement.  This will
