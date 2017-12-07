@@ -18,7 +18,8 @@ var DEFAULT_OPTIONS = {
     separator: '.',
     queryString: false,
     outputDir: '',
-    clearOutputDir: false
+    clearOutputDir: false,
+    prefixes: []
 };
 
 module.exports = function(grunt) {
@@ -29,6 +30,17 @@ module.exports = function(grunt) {
         var opts = this.options(DEFAULT_OPTIONS);
         if( opts.baseDir.substr(-1) !== '/' ) {
             opts.baseDir += '/';
+        }
+
+        // ensure the empty prefix is always there
+        if (opts.prefixes.indexOf('') === -1) {
+            opts.prefixes.push('');
+        }
+        // ensure non-empty prefixes have a trailing slash
+        for (var i = 0; i < opts.prefixes.length; i++) {
+            if (opts.prefixes[i] && opts.prefixes[i].substr(-1) !== '/') {
+                opts.prefixes[i] += '/';
+            }
         }
 
         var discoveryOpts = {
@@ -67,6 +79,7 @@ module.exports = function(grunt) {
         // \s{file}\s (other entries of img srcset)
         // files may contain a querystring, so all with ? as closing too
         var replaceEnclosedBy = [
+            ['\\"', '\\"'], // copes with templateCache js files where markup has been escaped in JSON strings
             ['"', '"'],
             ["'", "'"],
             ['(', ')'],
@@ -103,10 +116,12 @@ module.exports = function(grunt) {
             _.each(assetMap, function(hashed, original) {
                 var replace = [
                     // abs path
+                    [original, hashed],
                     ['/' + original, '/' + hashed],
                     // relative
                     [grunt.util.repeat(fileDepth, '../') + original, grunt.util.repeat(fileDepth, '../') + hashed],
                 ];
+
                 // find relative paths for shared dirs
                 var originalDirParts = path.dirname(original).split('/');
                 for (var i = 1; i <= fileDepth; i++) {
@@ -126,8 +141,11 @@ module.exports = function(grunt) {
                 _.each(replace, function(r) {
                     var original = r[0];
                     var hashed = r[1];
-                    _.each(replaceEnclosedBy, function(reb) {
-                        markup = markup.split(reb[0] + original + reb[1]).join(reb[0] + hashed + reb[1]);
+
+                    _.each(opts.prefixes, function (prefix) {
+                        _.each(replaceEnclosedBy, function (reb) {
+                            markup = markup.split(reb[0] + prefix + original + reb[1]).join(reb[0] + prefix + hashed + reb[1]);
+                        });
                     });
                 });
             });
