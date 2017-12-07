@@ -102,7 +102,6 @@ module.exports = function(grunt) {
         grunt.log.ok(files.length + ' file' + (files.length !== 1 ? 's ' : ' ') + 'busted.');
 
         function replaceInFile(filepath) {
-            grunt.log.writeln(filepath);
             var markup = grunt.file.read(filepath);
             var baseDir = discoveryOpts.cwd + '/';
             var relativeFileDir = path.dirname(filepath).substr(baseDir.length);
