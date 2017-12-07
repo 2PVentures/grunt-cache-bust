@@ -32,14 +32,27 @@ module.exports = function(grunt) {
             opts.baseDir += '/';
         }
 
-        // ensure the empty prefix is always there
+        // ensure the empty prefixes are always there
         if (opts.prefixes.indexOf('') === -1) {
             opts.prefixes.push('');
         }
-        // ensure non-empty prefixes have a trailing slash
+        if (opts.prefixes.indexOf('/') === -1) {
+            opts.prefixes.push('/');
+        }
+
+        // deal with trailing and leading slashes for prefixes
         for (var i = 0; i < opts.prefixes.length; i++) {
-            if (opts.prefixes[i] && opts.prefixes[i].substr(-1) !== '/') {
-                opts.prefixes[i] += '/';
+            var p = opts.prefixes[i];
+            // ensure non-empty prefixes have a trailing slash
+            if (!p || p[0] === '/') continue;
+            if (p.substr(-1) !== '/') {
+                p = p + '/';
+                opts.prefixes[i] = p;
+            }
+
+            var slashedPrefix = '/' + p;
+            if (opts.prefixes.indexOf(slashedPrefix) === -1) {
+                opts.prefixes.push(slashedPrefix);
             }
         }
 
@@ -117,7 +130,6 @@ module.exports = function(grunt) {
                 var replace = [
                     // abs path
                     [original, hashed],
-                    ['/' + original, '/' + hashed],
                     // relative
                     [grunt.util.repeat(fileDepth, '../') + original, grunt.util.repeat(fileDepth, '../') + hashed],
                 ];
