@@ -39,17 +39,17 @@ module.exports = function(grunt) {
 
         // deal with trailing and leading slashes for prefixes
         for (var i = 0; i < opts.prefixes.length; i++) {
-            var p = opts.prefixes[i];
+            var prefix = opts.prefixes[i];
 
             // ensure non-empty prefixes have a trailing slash
-            if (p && p.substr(-1) !== '/') {
-                p = p + '/';
-                opts.prefixes[i] = p;
+            if (prefix && prefix.substr(-1) !== '/') {
+                prefix = prefix + '/';
+                opts.prefixes[i] = prefix;
             }
 
-            if (p[0] === '/') continue;
+            if (prefix[0] === '/') continue;
             // ensure prefixes also have a leading slash prefix as well
-            var slashedPrefix = '/' + p;
+            var slashedPrefix = '/' + prefix;
             if (opts.prefixes.indexOf(slashedPrefix) === -1) {
                 opts.prefixes.push(slashedPrefix);
             }
