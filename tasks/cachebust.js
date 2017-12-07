@@ -32,9 +32,11 @@ module.exports = function(grunt) {
             opts.baseDir += '/';
         }
 
+        // ensure the empty prefix is always there
         if (opts.prefixes.indexOf('') === -1) {
             opts.prefixes.push('');
         }
+        // ensure non-empty prefixes have a trailing slash
         for (var i = 0; i < opts.prefixes.length; i++) {
             if (opts.prefixes[i] && opts.prefixes[i].substr(-1) !== '/') {
                 opts.prefixes[i] += '/';
