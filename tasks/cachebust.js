@@ -77,7 +77,7 @@ module.exports = function (grunt) {
         // \s{file}\s (other entries of img srcset)
         // files may contain a querystring, so all with ? as closing too
         var replaceEnclosedBy = [
-            ['\\"', '\\"'],
+            ['\\"', '\\"'], // copes with templateCache js files where markup has been escaped in JSON strings
             ['"', '"'],
             ["'", "'"],
             ['(', ')'],
@@ -114,9 +114,8 @@ module.exports = function (grunt) {
 
             _.each(assetMap, function (hashed, original) {
                 var replace = [
-                    // basic
-                    [original, hashed],
                     // abs path
+                    [original, hashed],
                     ['/' + original, '/' + hashed],
                     // relative
                     [grunt.util.repeat(fileDepth, '../') + original, grunt.util.repeat(fileDepth, '../') + hashed],
