@@ -91,7 +91,8 @@ module.exports = function(grunt) {
         // \s{file}\s (other entries of img srcset)
         // files may contain a querystring, so all with ? as closing too
         var replaceEnclosedBy = [
-            ['\\"', '\\"'], // copes with templateCache js files where markup has been escaped in JSON strings
+            ['\\"', '\\"'], // cope with escaped double quotes in templateCache js files where markup has been escaped in string literals
+            ["\\'", "\\'"], // cope with escaped single quotes in templateCache js files where markup has been escaped in string literals
             ['"', '"'],
             ["'", "'"],
             ['(', ')'],
